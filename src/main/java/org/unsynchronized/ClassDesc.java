@@ -1,7 +1,5 @@
 package org.unsynchronized;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.ObjectStreamConstants;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,7 +22,6 @@ import java.util.Set;
  * classdesc as well.
  * </p>
  */
-@Slf4j
 public class ClassDesc extends ContentBase {
 
     /**
@@ -205,12 +202,8 @@ public class ClassDesc extends ContentBase {
      * @param classes a list to be filled in with the hierarchy
      */
     public void getHierarchy(List<ClassDesc> classes) {
-        if (superclass != null) {
-            if (superclass.classType == ClassDescType.PROXY_CLASS) {
-                LOG.warn("hit a proxy class in superclass hierarchy");
-            } else {
-                superclass.getHierarchy(classes);
-            }
+        if (superclass != null && superclass.classType != ClassDescType.PROXY_CLASS) {
+            superclass.getHierarchy(classes);
         }
         classes.add(this);
     }

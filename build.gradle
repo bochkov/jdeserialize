@@ -8,20 +8,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.slf4j:slf4j-api:1.7.36'
-    runtimeOnly 'ch.qos.logback:logback-classic:1.2.13'
-
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
     testCompileOnly 'org.projectlombok:lombok:1.18.34'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
-
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation platform('org.junit:junit-bom:5.11.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.assertj:assertj-core:3.26.3'
-    testImplementation 'org.mockito:mockito-core:4.11.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
 }
 
 java {
