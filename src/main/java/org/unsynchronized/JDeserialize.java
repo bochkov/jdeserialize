@@ -160,8 +160,7 @@ public class JDeserialize {
                 return dis.readShort();
             case BOOLEAN:
                 return dis.readBoolean();
-            case OBJECT:
-            case ARRAY:
+            case OBJECT, ARRAY:
                 byte stc = dis.readByte();
 //                if(f == FieldType.ARRAY && stc != ObjectStreamConstants.TC_ARRAY) { FIXME
 //                    throw new IOException("array type listed, but typecode is not TC_ARRAY: " + hex(stc));
@@ -259,8 +258,7 @@ public class JDeserialize {
                 for (Field f : inst.fieldData.get(cd).keySet()) {
                     Object o = inst.fieldData.get(cd).get(f);
                     sb.append("        ").append(f.name).append(": ");
-                    if (o instanceof Content) {
-                        Content c = (Content) o;
+                    if (o instanceof Content c) {
                         int h = c.getHandle();
                         if (h == inst.handle) {
                             sb.append("this");
@@ -343,19 +341,19 @@ public class JDeserialize {
         if (cd.classType == ClassDescType.NORMAL_CLASS) {
             if ((cd.descFlags & ObjectStreamConstants.SC_ENUM) != 0) {
                 ps.print(indent(indentLevel) + "enum " + classname + " {");
-                boolean shouldindent = true;
+                boolean shouldIndent = true;
                 int len = indent(indentLevel + 1).length();
-                for (String econst : cd.enumConstants) {
-                    if (shouldindent) {
+                for (String eConst : cd.enumConstants) {
+                    if (shouldIndent) {
                         ps.println();
                         ps.print(indent(indentLevel + 1));
-                        shouldindent = false;
+                        shouldIndent = false;
                     }
-                    len += econst.length();
-                    ps.print(econst + ", ");
+                    len += eConst.length();
+                    ps.print(eConst + ", ");
                     if (len >= CODE_WIDTH) {
                         len = indent(indentLevel + 1).length();
-                        shouldindent = true;
+                        shouldIndent = true;
                     }
                 }
                 ps.println();
@@ -710,13 +708,11 @@ public class JDeserialize {
                     return readNewClass(dis);
                 case ObjectStreamConstants.TC_ARRAY:
                     return readNewArray(dis);
-                case ObjectStreamConstants.TC_STRING:
-                case ObjectStreamConstants.TC_LONGSTRING:
+                case ObjectStreamConstants.TC_STRING, ObjectStreamConstants.TC_LONGSTRING:
                     return readNewString(tc, dis);
                 case ObjectStreamConstants.TC_ENUM:
                     return readNewEnum(dis);
-                case ObjectStreamConstants.TC_CLASSDESC:
-                case ObjectStreamConstants.TC_PROXYCLASSDESC:
+                case ObjectStreamConstants.TC_CLASSDESC, ObjectStreamConstants.TC_PROXYCLASSDESC:
                     return handleNewClassDesc(tc, dis);
                 case ObjectStreamConstants.TC_REFERENCE:
                     return readPrevObject(dis);
@@ -724,8 +720,7 @@ public class JDeserialize {
                     return null;
                 case ObjectStreamConstants.TC_EXCEPTION:
                     return readException(dis);
-                case ObjectStreamConstants.TC_BLOCKDATA:
-                case ObjectStreamConstants.TC_BLOCKDATALONG:
+                case ObjectStreamConstants.TC_BLOCKDATA, ObjectStreamConstants.TC_BLOCKDATALONG:
                     if (!blockData) {
                         throw new IOException("got a blockdata TC_*, but not allowed here: " + hex(tc));
                     }
@@ -821,8 +816,7 @@ public class JDeserialize {
             pw.println("# Each line in this file that doesn't begin with a '#' contains the size of");
             pw.println("# an individual blockdata block written to the stream.");
             for (Content c : content) {
-                if (c instanceof BlockData) {
-                    BlockData bd = (BlockData) c;
+                if (c instanceof BlockData bd) {
                     pw.println(bd.buf.length);
                     bos.write(bd.buf);
                 }
@@ -844,8 +838,7 @@ public class JDeserialize {
                 + (showArray ? "" : " (excluding array classes)")
                 + (filter != null ? " (exclusion filter " + filter + ")" : ""));
         for (Content c : handles.values()) {
-            if (c instanceof ClassDesc) {
-                ClassDesc cl = (ClassDesc) c;
+            if (c instanceof ClassDesc cl) {
                 if (!showArray && cl.isArrayClass()) {
                     continue;
                 }
@@ -867,8 +860,7 @@ public class JDeserialize {
     public void dumpInstances(PrintStream out) {
         out.println("//// BEGIN instance dump");
         for (Content c : handles.values()) {
-            if (c instanceof Instance) {
-                Instance i = (Instance) c;
+            if (c instanceof Instance i) {
                 dumpInstance(i, out);
             }
         }
@@ -1029,11 +1021,8 @@ public class JDeserialize {
     }
 
     private static String indent(int level) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < level; i++) {
-            sb.append(INDENT_CHARS);
-        }
-        return sb.toString();
+        int lvl = Math.max(0, level);
+        return INDENT_CHARS.repeat(lvl);
     }
 
     static String hexNoPrefix(long value) {
@@ -1044,11 +1033,11 @@ public class JDeserialize {
         if (value < 0) {
             value = 256 + value;
         }
-        String s = Long.toString(value, 16);
+        StringBuilder s = new StringBuilder(Long.toString(value, 16));
         while (s.length() < len) {
-            s = "0" + s;
+            s.insert(0, "0");
         }
-        return s;
+        return s.toString();
     }
 
     static String hex(long value) {

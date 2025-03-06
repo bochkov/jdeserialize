@@ -19,8 +19,7 @@ public final class JExtract {
 
     public int handleForClass(String name) {
         for (Content c : contents.values()) {
-            if (c instanceof Instance) {
-                Instance in = (Instance) c;
+            if (c instanceof Instance in) {
                 for (ClassDesc cd : in.fieldData.keySet()) {
                     if (cd.name.equals(name))
                         return cd.getHandle();
@@ -32,15 +31,13 @@ public final class JExtract {
 
     public int handleForField(String name, int classHandle) {
         for (Content c : contents.values()) {
-            if (c instanceof Instance) {
-                Instance in = (Instance) c;
+            if (c instanceof Instance in) {
                 for (ClassDesc cd : in.fieldData.keySet()) {
                     if (cd.getHandle() == classHandle) {
                         for (Field f : cd.fields) {
                             if (f.name.equals(name)) {
                                 Object o = in.fieldData.get(cd).get(f);
-                                if (o instanceof Instance) {
-                                    Instance oi = (Instance) o;
+                                if (o instanceof Instance oi) {
                                     return oi.getHandle();
                                 }
                             }

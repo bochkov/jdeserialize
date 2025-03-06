@@ -1,5 +1,7 @@
 package org.unsynchronized;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,12 +41,12 @@ public class LoggerInputStream extends InputStream {
     }
 
     @Override
-    public synchronized int read(byte[] b) throws IOException {
+    public synchronized int read(byte @NotNull [] b) throws IOException {
         return this.read(b, 0, b.length);
     }
 
     @Override
-    public synchronized int read(byte[] b, int off, int len) throws IOException {
+    public synchronized int read(byte @NotNull [] b, int off, int len) throws IOException {
         int retVal = origin.read(b, off, len);
         if (recording && retVal > 0) {
             if (retVal > len) {
