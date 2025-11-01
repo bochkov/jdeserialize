@@ -10,10 +10,10 @@ repositories {
 dependencies {
     compileOnly 'org.jetbrains:annotations:26.0.2'
     compileOnly 'org.slf4j:slf4j-api:2.0.17'
-    compileOnly 'org.projectlombok:lombok:1.18.40'
-    annotationProcessor 'org.projectlombok:lombok:1.18.40'
-    testCompileOnly 'org.projectlombok:lombok:1.18.40'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.40'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
+    testCompileOnly 'org.projectlombok:lombok:1.18.42'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.42'
 }
 
 tasks.named('test') {
